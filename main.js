@@ -16,7 +16,6 @@ const player2 = {
         console.log(`${this.name} Fight...`);
     }
 };
-player1.attack();
 
 function createPlayer (playerNumber, player) {
     const $player1 = document.createElement('div');
