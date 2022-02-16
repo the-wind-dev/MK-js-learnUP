@@ -1,6 +1,5 @@
-// const $root = document.querySelector('.root');
 const $arenas = document.querySelector('.arenas');
-// const $randomButton = document.querySelector('.button');
+const $fightButton = document.querySelector('.button');
 const $formFight = document.querySelector('.control');
 const HIT = {
     head: 30,
@@ -116,7 +115,7 @@ function createReloadButton() {
     });
 
     $reloadWrap.appendChild($reloadButton);
-    $arenas.appendChild($reloadButton);
+    $arenas.appendChild($reloadWrap);
 }
 
 $arenas.appendChild( createPlayer(player1) );
@@ -177,6 +176,28 @@ $formFight.addEventListener('submit', function(event) {
 
     console.log('####: you', attack);
     console.log('####: enemy', enemy);
+
+    if ( enemy.hit !== attack.defence ) {
+        player1.changeHP(enemy.value);
+        player1.renderHP();
+    }
+    if ( attack.hit !== enemy.defence ) {
+        player2.changeHP(attack.value);
+        player2.renderHP();
+    }
+
+    if (player1.hp === 0 || player2.hp === 0) {
+    $fightButton.disabled = true;
+    createReloadButton();
+    }
+
+    if (player1.hp === 0 && player1.hp < player2.hp ) {
+        $arenas.appendChild( playerWin(player2.name) );
+    } else if (player2.hp === 0 && player2.hp < player1.hp ) {
+        $arenas.appendChild( playerWin(player1.name) );
+    } else if (player1.hp === 0 && player2.hp === 0) {
+        $arenas.appendChild( playerWin() );
+    }
 });
 
 
