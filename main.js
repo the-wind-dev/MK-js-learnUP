@@ -174,6 +174,20 @@ function playerAttack() {
     return attack;
 }
 
+function showResult() {
+    if (player1.hp === 0 || player2.hp === 0) {
+        $fightButton.disabled = true;
+        createReloadButton();
+        }
+    
+        if (player1.hp === 0 && player1.hp < player2.hp ) {
+            $arenas.appendChild( playerWin(player2.name) );
+        } else if (player2.hp === 0 && player2.hp < player1.hp ) {
+            $arenas.appendChild( playerWin(player1.name) );
+        } else if (player1.hp === 0 && player2.hp === 0) {
+            $arenas.appendChild( playerWin() );
+        }
+}
 $formFight.addEventListener('submit', function(event) {
     event.preventDefault();
     const enemy = enemyAttack();
@@ -181,9 +195,6 @@ $formFight.addEventListener('submit', function(event) {
 
     console.log('####: you', player);
     console.log('####: enemy', enemy);
-
-    // Есть ли смысл выносить следующие проверки в отдельные функции?
-    // безусловно, обработчик submit будет почище, но насколько это критично?
 
     if ( enemy.hit !== player.defence ) {
         player1.changeHP(enemy.value);
@@ -194,18 +205,7 @@ $formFight.addEventListener('submit', function(event) {
         player2.renderHP();
     }
 
-    if (player1.hp === 0 || player2.hp === 0) {
-    $fightButton.disabled = true;
-    createReloadButton();
-    }
-
-    if (player1.hp === 0 && player1.hp < player2.hp ) {
-        $arenas.appendChild( playerWin(player2.name) );
-    } else if (player2.hp === 0 && player2.hp < player1.hp ) {
-        $arenas.appendChild( playerWin(player1.name) );
-    } else if (player1.hp === 0 && player2.hp === 0) {
-        $arenas.appendChild( playerWin() );
-    }
+    showResult();
 });
 
 
