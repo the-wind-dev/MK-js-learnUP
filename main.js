@@ -145,8 +145,9 @@ $arenas.appendChild( createPlayer(player2) );
 //     }
 // });
 function enemyAttack() {
-    const hit = ATTACK[getRandom(3) - 1];
-    const defence = ATTACK[getRandom(3) - 1];
+    const length = ATTACK.length;
+    const hit = ATTACK[getRandom(length) - 1];
+    const defence = ATTACK[getRandom(length) - 1];
 
     return {
         value: getRandom( HIT[hit] ),
@@ -155,10 +156,7 @@ function enemyAttack() {
     };
 }
 
-$formFight.addEventListener('submit', function(event) {
-    event.preventDefault();
-    const enemy = enemyAttack();
-
+function playerAttack() {
     const attack = {};
 
     for (let item of $formFight) {
@@ -173,16 +171,26 @@ $formFight.addEventListener('submit', function(event) {
 
         item.checked = false;
     }
+    return attack;
+}
 
-    console.log('####: you', attack);
+$formFight.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const enemy = enemyAttack();
+    const player = playerAttack();
+
+    console.log('####: you', player);
     console.log('####: enemy', enemy);
 
-    if ( enemy.hit !== attack.defence ) {
+    // Есть ли смысл выносить следующие проверки в отдельные функции?
+    // безусловно, обработчик submit будет почище, но насколько это критично?
+
+    if ( enemy.hit !== player.defence ) {
         player1.changeHP(enemy.value);
         player1.renderHP();
     }
-    if ( attack.hit !== enemy.defence ) {
-        player2.changeHP(attack.value);
+    if ( player.hit !== enemy.defence ) {
+        player2.changeHP(player.value);
         player2.renderHP();
     }
 
