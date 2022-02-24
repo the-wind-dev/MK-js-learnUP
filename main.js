@@ -10,7 +10,7 @@ const HIT = {
 };
 const ATTACK = ['head', 'body', 'foot'];
 
-const logs = {
+const LOGS = {
     start: 'Часы показывали [time], когда [player1] и [player2] бросили вызов друг другу.',
     end: [
         'Результат удара [playerWins]: [playerLose] - труп',
@@ -56,7 +56,7 @@ const player1 = {
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
     weapon: ['knife', 'sword', 'gun'],
-    attack: attack,
+    // attack: attack,
     changeHP,
     elHP,
     renderHP,
@@ -67,15 +67,15 @@ const player2 = {
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
     weapon: ['knife', 'sword', 'gun'],
-    attack: attack,
+    // attack: attack,
     changeHP,
     elHP,
     renderHP,
 };
 
-function attack() {
-    console.log(`${this.name} Fight...`);
-}
+// function attack() {
+//     console.log(`${this.name} Fight...`);
+// }
 
 function changeHP(damage) {
     this.hp -= damage;  
@@ -85,8 +85,7 @@ function changeHP(damage) {
 }
 
 function elHP() {
-    const $playerLife = document.querySelector('.player' + this.player + ' .life');
-    return $playerLife;
+    return document.querySelector('.player' + this.player + ' .life');
 }
 
 function renderHP() {
@@ -164,8 +163,8 @@ $arenas.appendChild( createPlayer(player2) );
 
 function enemyAttack() {
     const length = ATTACK.length;
-    const hit = ATTACK[getRandom(length) - 1];
-    const defence = ATTACK[getRandom(length) - 1];
+    const hit = ATTACK[ getRandom(length - 1) ];
+    const defence = ATTACK[ getRandom(length- 1) ];
 
     return {
         value: getRandom( HIT[hit] ),
@@ -240,29 +239,31 @@ function generateLogs(type, player1, player2, damage) {
     let log = '';
     switch (type) {
         case 'start':
-            text = logs[type].replace('[time]', getTime() ).replace('[player1]', player1.name).replace('[player2]', player2.name);
+            text = LOGS[type].replace('[time]', getTime() ).replace('[player1]', player1.name).replace('[player2]', player2.name);
             log = `[${getTime()}] ${text}`;
             renderLogs(log);
             break;
 
         case 'end':
-            renderLogs( logs[type][ getRandom(logs[type].length - 1) ].replace('[playerWins]', player1.name).replace('[playerLose]', player2.name) );
+            text = LOGS[type][ getRandom(LOGS[type].length - 1) ].replace('[playerWins]', player1.name).replace('[playerLose]', player2.name);
+            log = `[${getTime()}] ${text}`;
+            renderLogs(log);
             break;
         
         case 'hit':
-            text = logs[type][ getRandom(logs[type].length - 1) ].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
+            text = LOGS[type][ getRandom(LOGS[type].length - 1) ].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
             log = `[${getTime()}] ${text} -${damage}hp [${player2.hp}/100]`;
             renderLogs(log);
             break;
 
         case 'defence':
-            text = logs[type][ getRandom(logs[type].length - 1) ].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
+            text = LOGS[type][ getRandom(LOGS[type].length - 1) ].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
             log = `[${getTime()}] ${text} blocked damdge: ${damage}hp [${player2.hp}/100]`;
             renderLogs(log);            
             break;
         
         case 'draw':
-            text = logs[type];
+            text = LOGS[type];
             log = `[${getTime()}] ${text}`;
             renderLogs(log);
             break;
