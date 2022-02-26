@@ -5,6 +5,8 @@ const init = () => {
     const $formFight = document.querySelector('.control');
     const $arenas = document.querySelector('.arenas');
 
+    generateLogs('start', player1, player2);
+
     $formFight.addEventListener('submit', function (event) {
         event.preventDefault();
 
@@ -19,7 +21,7 @@ const init = () => {
     $arenas.appendChild( createPlayer(player1) );
     $arenas.appendChild( createPlayer(player2) );
     
-    generateLogs('start', player1.name, player2.name);
+    
 };
 
 init();
