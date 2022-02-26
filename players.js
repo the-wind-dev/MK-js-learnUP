@@ -1,9 +1,9 @@
-import { ATTACK, HIT, $formFight, $fightButton, $arenas } from "./consts.js";
-import { getRandom, createReloadButton, createElement } from "./utils.js";
+import { ATTACK, HIT } from "./consts.js";
+import { getRandom, createReloadButton, createElement } from "./utils/index.js";
 import {generateLogs} from './log.js';
 
 export const player1 = {
-    player: 1,
+    playerID: 1,
     name: 'Subzero',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
@@ -14,7 +14,7 @@ export const player1 = {
 };
 
 export const player2 = {
-    player: 2,
+    playerID: 2,
     name: 'Scorpion',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
@@ -32,25 +32,76 @@ function changeHP(damage) {
 }
 
 function elHP() {
-    return document.querySelector('.player' + this.player + ' .life');
+    return document.querySelector('.player' + this.playerID + ' .life');
 }
 
 function renderHP() {
     this.elHP().style.width = this.hp + '%';
 }
 
-export const playerWin = (name) => {
-    const $winTitle = createElement('div', 'winTitle');
-    if (name) {
-        $winTitle.innerText = name + ' won';
-    } else {
-        $winTitle.innerText = 'draw';
-    }
-    
-    return $winTitle;
-};
+/**
+ * создание и отрисовка player
+ * @param {object} playerObj 
+ * @returns {HTMLElement}
+ */
+export function createPlayer(playerObj) {
+    const {playerID, name, hp, img} = playerObj;
 
-export const enemyAttack = () => {
+    const $player = createElement('div', 'player' + playerID);
+    const $progressbar = createElement('div', 'progressbar');
+    const $character = createElement('div', 'character');
+    const $life = createElement('div', 'life');
+    const $name = createElement('div', 'name');
+
+    const $img = createElement('img');
+
+    $player.appendChild($progressbar);
+    $player.appendChild($character);
+    $progressbar.appendChild($life);
+    $progressbar.appendChild($name);
+    $character.appendChild($img);
+
+    $life.style.width = hp + "%";
+    $name.innerText = name;
+    $img.src = img;
+
+    return $player;
+}
+
+/**
+ * @param {object} player1 - you
+ * @param {object} player2 - your enemy
+ * @param {HTMLElement} $formFight - form для создания действий игрока
+ */
+
+export function fight(player1, player2, $formFight) {
+    const enemy = enemyAttack();
+    const player = playerAttack($formFight);
+
+    if (enemy.hit !== player.defence) {
+        player1.changeHP(enemy.value);
+        player1.renderHP();
+        generateLogs('hit', player2, player1, enemy.value);
+    } else {
+        generateLogs('defence', player2, player1, enemy.value);
+    }
+
+    if (player.hit !== enemy.defence) {
+        player2.changeHP(player.value);
+        player2.renderHP();
+        generateLogs('hit', player1, player2, player.value);
+    } else {
+        generateLogs('defence', player1, player2, player.value);
+    }
+}
+
+
+
+/**
+ * создание действия противника: удар (+урон), защита
+ * @returns {object}
+ */
+const enemyAttack = () => {
     const length = ATTACK.length;
     const hit = ATTACK[ getRandom(length - 1) ];
     const defence = ATTACK[ getRandom(length- 1) ];
@@ -62,7 +113,13 @@ export const enemyAttack = () => {
     };
 };
 
-export const playerAttack = () => {
+/**
+ * создание действий игрока: удар (+урон), защита
+ * @param {HTMLElement} - form, из которой берутся удар, защита
+ * @param {}
+ * @returns {object}
+ */
+const playerAttack = ($formFight) => {
     const attack = {};
 
     for (let item of $formFight) {
@@ -80,21 +137,44 @@ export const playerAttack = () => {
     return attack;
 };
 
-export const showResult = () => {
-    if (player1.hp === 0 || player2.hp === 0) {
+/**
+ * создание надписи "[PlayerName?] won"
+ * @param {string} [name]
+ * @returns {HTMLElement}
+ */
+const playerWin = (name) => {
+    const $winTitle = createElement('div', 'winTitle');
+    if (name) {
+        $winTitle.innerText = name + ' won';
+    } else {
+        $winTitle.innerText = 'draw';
+    }
+    
+    return $winTitle;
+};
+/**
+ * рендер результата боя (с логом)
+ * @param {object} player 
+ * @param {object} enemy
+ * @param {HTMLElement} $arenas
+ */
+export const showResult = (player, enemy, $arenas) => {
+    const $fightButton = document.querySelector('.button');
+
+    if (player.hp === 0 || enemy.hp === 0) {
         $fightButton.disabled = true;
-        createReloadButton();
+        createReloadButton($arenas);
         }
     
-    if (player1.hp === 0 && player1.hp < player2.hp ) {
-        $arenas.appendChild( playerWin(player2.name) );
-        generateLogs('end', player2, player1);
+    if (player.hp === 0 && player.hp < enemy.hp ) {
+        $arenas.appendChild( playerWin(enemy.name) );
+        generateLogs('end', enemy, player);
 
-    } else if (player2.hp === 0 && player2.hp < player1.hp ) {
-        $arenas.appendChild( playerWin(player1.name) );
-        generateLogs('end', player1, player2);
+    } else if (enemy.hp === 0 && enemy.hp < player.hp ) {
+        $arenas.appendChild( playerWin(player.name) );
+        generateLogs('end', player, enemy);
 
-    } else if (player1.hp === 0 && player2.hp === 0) {
+    } else if (player.hp === 0 && enemy.hp === 0) {
         $arenas.appendChild( playerWin() );
         generateLogs('draw');
     }

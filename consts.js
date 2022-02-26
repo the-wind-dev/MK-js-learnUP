@@ -1,7 +1,10 @@
 export const HIT = {
-    head: 30,
-    body: 25,
-    foot: 20,
+    head: 60,
+    body: 85,
+    foot: 80,
+    // head: 30,
+    // body: 25,
+    // foot: 20,
 };
 export const ATTACK = ['head', 'body', 'foot'];
 
@@ -45,7 +48,3 @@ export const LOGS = {
     draw: 'Ничья - это тоже победа!'
 };
 
-export const $arenas = document.querySelector('.arenas');
-export const $formFight = document.querySelector('.control');
-export const $chat = document.querySelector('.chat');
-export const $fightButton = document.querySelector('.button');

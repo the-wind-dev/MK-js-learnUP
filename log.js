@@ -1,8 +1,10 @@
-import {LOGS, $chat} from './consts.js';
-import {getTime, getRandom} from './utils.js';
+import {LOGS} from './consts.js';
+import {getTime, getRandom} from './utils/index.js';
+
+const $chat = document.querySelector('.chat');
 
 /**
- * создаем элемент и добаваляем его в чат
+ * создаем элемент и добаваляем его в чат ($chat)
  * @param {string} text 
  */
  export function renderLogs(text) {
@@ -18,6 +20,7 @@ import {getTime, getRandom} from './utils.js';
  * @param {number} [damage] 
  */
 export function generateLogs(type, player1, player2, damage) {
+    
     let text = '';
     let log = '';
     switch (type) {
