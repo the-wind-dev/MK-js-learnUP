@@ -1,18 +1,15 @@
 import { $arenas } from './consts.js';
 
-export function createElement(tag, className) {
+export const createElement = (tag, className) => {
     const $tag = document.createElement(tag);
     if (className) {
         $tag.classList.add(className);
     }
     
     return $tag;
-}
-// export default createElement;
+};
 
-export function getRandom(num) {
-    return Math.ceil( Math.random() * num );
-}
+export const getRandom = (num) => Math.ceil( Math.random() * num );
 
 export function createReloadButton() {
     const $reloadWrap = createElement('div', 'reloadWrap');
@@ -31,8 +28,15 @@ export function createReloadButton() {
 * вывод текущего времени в формате чч:мм:сс
 * @returns {string}
 */
-export function getTime() {
-   const now = new Date();
-   const time = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+export const getTime = () => {
+    const now = new Date();
+   const time = `${formatTime( now.getHours() )}:${formatTime( now.getMinutes() )}:${formatTime( now.getSeconds()) }`;
    return time;
-}
+};
+
+const formatTime = (time) => {
+    if (time < 10) {
+        time = `0${time}`;
+    }
+    return time;
+};

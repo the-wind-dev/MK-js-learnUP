@@ -39,7 +39,7 @@ function renderHP() {
     this.elHP().style.width = this.hp + '%';
 }
 
-export function playerWin(name) {
+export const playerWin = (name) => {
     const $winTitle = createElement('div', 'winTitle');
     if (name) {
         $winTitle.innerText = name + ' won';
@@ -48,9 +48,9 @@ export function playerWin(name) {
     }
     
     return $winTitle;
-}
+};
 
-export function enemyAttack() {
+export const enemyAttack = () => {
     const length = ATTACK.length;
     const hit = ATTACK[ getRandom(length - 1) ];
     const defence = ATTACK[ getRandom(length- 1) ];
@@ -60,9 +60,9 @@ export function enemyAttack() {
         hit,
         defence,
     };
-}
+};
 
-export function playerAttack() {
+export const playerAttack = () => {
     const attack = {};
 
     for (let item of $formFight) {
@@ -78,9 +78,9 @@ export function playerAttack() {
         item.checked = false;
     }
     return attack;
-}
+};
 
-export function showResult() {
+export const showResult = () => {
     if (player1.hp === 0 || player2.hp === 0) {
         $fightButton.disabled = true;
         createReloadButton();
@@ -98,4 +98,4 @@ export function showResult() {
         $arenas.appendChild( playerWin() );
         generateLogs('draw');
     }
-}
+};
