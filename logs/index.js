@@ -48,12 +48,12 @@ function getTextLog(type, player1Name, player2Name) {
         }
 }
 
-export function generateLogs(type, player1 = {}, player2 = {}, damage) {
+export function generateLogs(type, { name: player1Name } = {}, {name: player2Name, hp: player2hp } = {}, damage) {
 
-    let text = getTextLog(type, player1.name, player2.name);
+    let text = getTextLog(type, player1Name, player2Name);
     switch (type) {
         case 'hit':
-            text = `${getTime()} ${text} -${damage}hp [${player2.hp}/100]`;
+            text = `${getTime()} ${text} -${damage}hp [${player2hp}/100]`;
             break;
         case 'defence':
             text = `${getTime()} ${text} blocked damdge: ${damage}hp`;

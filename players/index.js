@@ -32,7 +32,7 @@ function changeHP(damage) {
 }
 
 function elHP() {
-    return document.querySelector('.player' + this.playerID + ' .life');
+    return document.querySelector(`.player${this.playerID} .life`);
 }
 
 function renderHP() {
@@ -44,8 +44,7 @@ function renderHP() {
  * @param {object} playerObj 
  * @returns {HTMLElement}
  */
-export function createPlayer(playerObj) {
-    const {playerID, name, hp, img} = playerObj;
+export function createPlayer( {playerID, name, hp, img} ) {
 
     const $player = createElement('div', 'player' + playerID);
     const $progressbar = createElement('div', 'progressbar');
@@ -75,23 +74,23 @@ export function createPlayer(playerObj) {
  */
 
 export function fight(player1, player2, $formFight) {
-    const enemy = enemyAttack();
-    const player = playerAttack($formFight);
+    const {hit: hitEnemy, defence: defenceEnemy, value: valueEnemy} = enemyAttack();
+    const {hit: hitPlayer, defence: defencePlayer, value: valuePlayer} = playerAttack($formFight);
     
-    if (enemy.hit !== player.defence) {
-        player1.changeHP(enemy.value);
+    if (hitEnemy !== defencePlayer) {
+        player1.changeHP(valueEnemy);
         player1.renderHP();
-        generateLogs('hit', player2, player1, enemy.value);
+        generateLogs('hit', player2, player1, valueEnemy);
     } else {
-        generateLogs('defence', player2, player1, enemy.value);
+        generateLogs('defence', player2, player1, valueEnemy);
     }
 
-    if (player.hit !== enemy.defence) {
-        player2.changeHP(player.value);
+    if (hitPlayer !== defenceEnemy) {
+        player2.changeHP(valuePlayer);
         player2.renderHP();
-        generateLogs('hit', player1, player2, player.value);
+        generateLogs('hit', player1, player2, valuePlayer);
     } else {
-        generateLogs('defence', player1, player2, player.value);
+        generateLogs('defence', player1, player2, valuePlayer);
     }
 }
 
