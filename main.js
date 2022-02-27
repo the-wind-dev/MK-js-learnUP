@@ -1,4 +1,4 @@
-import {player1, player2, showResult, createPlayer, fight} from './players/index.js';
+import {player1, player2, showResult, fight} from './players/index.js';
 import {generateLogs} from './logs/index.js';
 
 const init = () => {
@@ -17,10 +17,8 @@ const init = () => {
         }
         
     });
-    
-    $arenas.appendChild( createPlayer(player1) );
-    $arenas.appendChild( createPlayer(player2) );
-    
+    player1.createPlayer();
+    player2.createPlayer();  
     
 };
 
