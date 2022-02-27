@@ -1,5 +1,5 @@
-import {LOGS} from './consts.js';
-import {getTime, getRandom} from './utils/index.js';
+import {LOGS} from '../consts/index.js';
+import {getTime, getRandom} from '../utils/index.js';
 
 const $chat = document.querySelector('.chat');
 
@@ -48,46 +48,7 @@ function getTextLog(type, player1Name, player2Name) {
         }
 }
 
-// export function generateLogs(type, player1, player2, damage) {
-//     let text = getTextLog(type, player1.name, player2.name);
-//     let log = '';
-
-//     switch (type) {
-//         case 'start':
-//             text = LOGS[type].replace('[time]', getTime() ).replace('[player1]', player1.name).replace('[player2]', player2.name);
-//             log = `[${getTime()}] ${text}`;
-//             renderLogs(log);
-//             break;
-
-//         case 'end':
-//             text = LOGS[type][ getRandom(LOGS[type].length - 1) - 1 ].replace('[playerWins]', player1.name).replace('[playerLose]', player2.name);
-//             log = `[${getTime()}] ${text}`;
-//             renderLogs(log);
-//             break;
-        
-//         case 'hit':
-//             text = LOGS[type][ getRandom(LOGS[type].length - 1) - 1 ].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
-//             log = `[${getTime()}] ${text} -${damage}hp [${player2.hp}/100]`;
-//             renderLogs(log);
-//             break;
-
-//         case 'defence':
-//             text = LOGS[type][ getRandom(LOGS[type].length - 1) - 1 ].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
-//             log = `[${getTime()}] ${text} blocked damdge: ${damage}hp [${player2.hp}/100]`;
-//             renderLogs(log);            
-//             break;
-        
-//         case 'draw':
-//             text = LOGS[type];
-//             log = `[${getTime()}] ${text}`;
-//             renderLogs(log);
-//             break;
-
-//         default:
-//             renderLogs( 'кто-то похитил данное сообщение' );
-//     }    
-// }
-export function generateLogs(type, player1, player2, damage) {
+export function generateLogs(type, player1 = {}, player2 = {}, damage) {
 
     let text = getTextLog(type, player1.name, player2.name);
     switch (type) {

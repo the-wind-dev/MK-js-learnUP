@@ -1,5 +1,5 @@
-import {player1, player2, showResult, createPlayer, fight} from './players.js';
-import {generateLogs} from './log.js';
+import {player1, player2, showResult, createPlayer, fight} from './players/index.js';
+import {generateLogs} from './logs/index.js';
 
 const init = () => {
     const $formFight = document.querySelector('.control');

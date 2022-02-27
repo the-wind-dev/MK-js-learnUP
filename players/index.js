@@ -1,6 +1,6 @@
-import { ATTACK, HIT } from "./consts.js";
-import { getRandom, createReloadButton, createElement } from "./utils/index.js";
-import {generateLogs} from './log.js';
+import { ATTACK, HIT } from "../consts/index.js";
+import { getRandom, createReloadButton, createElement } from "../utils/index.js";
+import {generateLogs} from '../logs/index.js';
 
 export const player1 = {
     playerID: 1,
@@ -77,7 +77,7 @@ export function createPlayer(playerObj) {
 export function fight(player1, player2, $formFight) {
     const enemy = enemyAttack();
     const player = playerAttack($formFight);
-
+    
     if (enemy.hit !== player.defence) {
         player1.changeHP(enemy.value);
         player1.renderHP();
@@ -102,9 +102,9 @@ export function fight(player1, player2, $formFight) {
  * @returns {object}
  */
 const enemyAttack = () => {
-    const length = ATTACK.length;
-    const hit = ATTACK[ getRandom(length - 1) ];
-    const defence = ATTACK[ getRandom(length- 1) ];
+    const length = ATTACK.length; 
+    const hit = ATTACK[ getRandom(length) - 1 ];
+    const defence = ATTACK[ getRandom(length) - 1 ];
 
     return {
         value: getRandom( HIT[hit] ),

@@ -1,11 +1,12 @@
 export const HIT = {
     // head: 60,
-    // body: 85,
-    // foot: 80,
+    // body: 60,
+    // foot: 60,
     head: 30,
     body: 25,
     foot: 20,
 };
+
 export const ATTACK = ['head', 'body', 'foot'];
 
 export const LOGS = {
