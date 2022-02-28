@@ -1,26 +1,61 @@
-import { ATTACK, HIT } from "../consts/index.js";
-import { getRandom, createReloadButton, createElement } from "../utils/index.js";
-import {generateLogs} from '../logs/index.js';
-import { player1, player2 } from './players/index.js';
+import { createReloadButton, createElement } from "./utils/index.js";
+import {generateLogs} from './logs/index.js';
+import { Player } from './players/index.js';
 
 
 export class Game {
-    // constructor(props) {
-    //     this.root = props.root;
+    
+    /* а зачем тут вообще async await?
+     */
+    //получение всего массива игроков
+    // getPlayers = async () => {
+    //     const res = await fetch('https://reactmarathon-api.herokuapp.com/api/mk/players')
+    //             .then( response => response.json());
+    //     return res;
     // }
+    //получение случайного игрока 
+    getRandomPlayer = async () => {
+        const res = await fetch('https://reactmarathon-api.herokuapp.com/api/mk/player/choose')
+                .then( response => response.json());
+        return res;
+    }
 
-    start = () => {
+    start = async () => {
+
+        let p1;
+        let p2;
+        //id 12 без gif  на сервере, если id=12, то перевыбор
+        do {
+            p1 = await this.getRandomPlayer();
+            console.log('repeat');
+        } while ( p1.id == 12 );
+        do {
+            p2 = await this.getRandomPlayer();
+            console.log('repeat');
+        } while ( p2.id == 12 );
+        
+        const player1 = new Player({
+            ...p1,
+            playerID: 1,
+            rootSelector: 'arenas',
+        });
+        const player2 = new Player({
+            ...p2,
+            playerID: 2,
+            rootSelector: 'arenas',
+        });
 
         const $formFight = document.querySelector('.control');
         const $arenas = document.querySelector('.arenas');
 
         generateLogs('start', player1, player2);
 
-        $formFight.addEventListener('submit',  (event) => {
+        $formFight.addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            this.fight(player1, player2, $formFight);
-            
+            await this.fight(player1, player2, $formFight);
+
+
             if (player1.hp == 0 || player2.hp ==0) {
                 this.showResult(player1, player2, $arenas); 
             }
@@ -35,15 +70,18 @@ export class Game {
      * @param {object} player2 - your enemy
      * @param {HTMLElement} $formFight - form для информации о действиях игрока
      */
-    fight = (player1, player2, $formFight) => {
-
-        const {hit: hitEnemy, defence: defenceEnemy, value: valueEnemy} = this.enemyAttack();
-        const {hit: hitPlayer, defence: defencePlayer, value: valuePlayer} = this.playerAttack($formFight);
-        
+    fight = async (player1, player2, $formFight) => {
+        const fightInfo = await this.getFightInfo($formFight);
+        console.log(fightInfo);
+        const {player1: {hit: hitPlayer, defence: defencePlayer, value: valuePlayer},
+               player2: {hit: hitEnemy, defence: defenceEnemy, value: valueEnemy}
+              } = fightInfo; 
+        console.log(hitPlayer, defencePlayer, valuePlayer);
+        console.log(hitEnemy, defenceEnemy, valueEnemy);
         if (hitEnemy !== defencePlayer) {
-            player1.changeHP(valueEnemy);
-            player1.renderHP();
-            generateLogs('hit', player2, player1, valueEnemy);
+        player1.changeHP(valueEnemy);
+        player1.renderHP();
+        generateLogs('hit', player2, player1, valueEnemy);
         } else {
             generateLogs('defence', player2, player1, valueEnemy);
         }
@@ -56,35 +94,25 @@ export class Game {
             generateLogs('defence', player1, player2, valuePlayer);
         }
     }
-
-    /**
-     * создание действия противника: удар (+урон), защита
-     * @returns {object}
-     */
-    enemyAttack = () => {
-        const length = ATTACK.length; 
-        const hit = ATTACK[ getRandom(length) - 1 ];
-        const defence = ATTACK[ getRandom(length) - 1 ];
-
-        return {
-            value: getRandom( HIT[hit] ),
-            hit,
-            defence,
-        };
+ 
+    getFightInfo = async ($formFight) => {
+        const {hit: hitPlayer, defence: defencePlayer} = this.playerAttack($formFight);
+        
+        const fightInfo =  await fetch('http://reactmarathon-api.herokuapp.com/api/mk/player/fight', {
+            method: 'POST',
+            body: JSON.stringify({
+                hit: hitPlayer,
+                defence: defencePlayer,
+            })
+        }).then( res => res.json());
+        return fightInfo;
     }
-
-    /**
-     * создание действий игрока: удар (+урон), защита
-     * @param {HTMLElement} - form, из которой берутся удар, защита
-     * @param {}
-     * @returns {object}
-     */
+    
     playerAttack = ($formFight) => {
         const attack = {};
-
+        
         for (let item of $formFight) {
             if (item.checked && item.name === 'hit') {
-                attack.value = getRandom( HIT[item.value] );
                 attack.hit = item.value;
             }
 

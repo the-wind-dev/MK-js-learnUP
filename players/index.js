@@ -1,8 +1,7 @@
-// import { ATTACK, HIT } from "../consts/index.js";
-import { getRandom, createReloadButton, createElement } from "../utils/index.js";
-// import {generateLogs} from '../logs/index.js';
 
-class Player {
+import { getRandom, createReloadButton, createElement } from "../utils/index.js";
+
+export class Player {
     constructor(props) {
         this.playerID = props.playerID;
         this.name = props.name;
@@ -57,19 +56,20 @@ class Player {
 
 
 
-export const player1 = new Player( {
-    playerID: 1,
-    name: 'Subzero',
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
-    rootSelector: 'arenas',
+// export const player1 = new Player( {
+//     playerID: 1,
+//     name: 'Subzero',
+//     hp: 100,
+//     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
+//     rootSelector: 'arenas',
     
-});
+// });
 
-export const player2 = new Player( {
-    playerID: 2,
-    name: 'Scorpion',
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
-    rootSelector: 'arenas',
-} );
+// export const player2 = new Player( {
+//     playerID: 2,
+//     name: 'Scorpion',
+//     hp: 100,
+//     img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
+//     rootSelector: 'arenas',
+// } );
+
